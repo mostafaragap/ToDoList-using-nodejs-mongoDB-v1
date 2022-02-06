@@ -71,25 +71,43 @@ app.get("/", function(req, res) {
 
 });
 
+app.post("/addCustomList" , (req,res)=>
+{
+  const newListName =  _.capitalize(req.body.customList) ;
+  List.findOne({name:newListName} , (err,result)=>{
+    if(err){console.log(err);}
+    else{
+      if(!result){
+        const list = new List(
+          {
+            name : newListName ,
+            items : [item1 , item2 , item3]
+          }
+        );
+        list.save();
+        res.redirect("/"+ newListName);
+      }else {
+          res.render("list", {listTitle:newListName , newListItems: result.items});
+          console.log("Exist list name");
+      }
+
+    }
+
+  });
+
+
+});
+
 app.get("/:custmListName", function(req,res){
 
-const newListName = _.capitalize(req.params.custmListName);
+const newListName = req.params.custmListName;
 List.findOne({name:newListName} , (err,result)=>{
   if(err){console.log(err);}
   else{
-    if(!result){
-      const list = new List(
-        {
-          name : newListName ,
-          items : [item1 , item2 , item3]
-        }
-      );
-      list.save();
-      res.redirect("/"+ newListName);
-    }else {
-        res.render("list", {listTitle:newListName , newListItems: result.items});
-        console.log("Exist list name");
-    }
+
+    res.render("list", {listTitle:newListName , newListItems: result.items});
+    console.log("Exist list name");
+
 
   }
 
