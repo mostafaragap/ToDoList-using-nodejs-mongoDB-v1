@@ -55,13 +55,28 @@ app.get("/", function(req, res) {
   {
     if(err){console.log(err);}else{
       if(foundsItems.length === 0 ){
+        List.find((err,lists)=>
+      {
+        if(!err)
+        {
+            res.render("list", {listTitle: "Today", newListItems: foundsItems , listsname:lists});
+        }
+      });
         Item.insertMany(defaultItems , (err)=>
         {
           if(err){console.log(err);}else{console.log("succecfully saved");}
         });
         res.redirect("/");
       }else{
-        res.render("list", {listTitle: "Today", newListItems: foundsItems});}
+        List.find((err,lists)=>
+      {
+        if(!err)
+        {
+            res.render("list", {listTitle: "Today", newListItems: foundsItems , listsname:lists});
+        }
+      });
+
+      }
 
       }
 
@@ -73,6 +88,15 @@ app.get("/", function(req, res) {
 
 app.post("/addCustomList" , (req,res)=>
 {
+    const array =[];
+  List.find((err,items)=>
+{
+  if(!err)
+  {
+    items.forEach((item) =>
+  {
+    array.push(item);
+  });
   const newListName =  _.capitalize(req.body.customList) ;
   List.findOne({name:newListName} , (err,result)=>{
     if(err){console.log(err);}
@@ -87,13 +111,16 @@ app.post("/addCustomList" , (req,res)=>
         list.save();
         res.redirect("/"+ newListName);
       }else {
-          res.render("list", {listTitle:newListName , newListItems: result.items});
+          res.render("list", {listTitle:newListName ,listsname:array, newListItems: result.items});
           console.log("Exist list name");
       }
 
     }
 
   });
+  }
+});
+
 
 
 });
@@ -101,20 +128,34 @@ app.post("/addCustomList" , (req,res)=>
 app.get("/:custmListName", function(req,res){
 
 const newListName = req.params.custmListName;
-List.findOne({name:newListName} , (err,result)=>{
-  if(err){console.log(err);}
-  else{
 
-    res.render("list", {listTitle:newListName , newListItems: result.items});
-    console.log("Exist list name");
+List.find((err,results) =>
+{
+  if(!err){
+    const array =[] ;
+  results.forEach((item) => {
+    array.push(item);
+
+  });
+  List.findOne({name:newListName} , (err,result)=>{
+    if(err){console.log(err);}
+    else{
 
 
+   res.render("list", {listTitle: newListName, listsname :array,newListItems: result.items });
+
+
+
+    }
+
+  });
   }
-
 });
 
 
+
 });
+
 
 app.post("/", function(req, res){
 
@@ -183,7 +224,24 @@ app.post("/delete" , (req,res)=>
 
 
 app.get("/about", function(req, res){
-  res.render("about");
+  List.findOne({name:newListName} , (err,result)=>{
+    if(err){console.log(err);}
+    else{
+      List.find((err,lists)=>
+    {
+      if(!err)
+      {
+        res.render("about",{newListItems: result.items , listsname:lists});
+      }
+    });
+
+
+
+
+
+    }
+
+  });
 });
 
 app.listen(3000, function() {

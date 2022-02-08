@@ -9,12 +9,64 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-light">
+
+
+
+
+  <!-- <nav class="navbar navbar-light">
     <div class="container-fluid">
       <a class="navbar-brand">ToDo List</a>
+
+      <form action="/addCustomList" method="post" class="d-flex">
+        <input class="form-control me-2" name="customList" type="search" placeholder="Add your Custom list" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Add</button>
+
+        <div class="btn-group">
+
+      </form>
+        <button type="button" class="ssss btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          View Lists
+        </button>
+        <ul class="dropdown-menu">
+          <% listsname.forEach((item)=>  {%>
+              <li><a class="dropdown-item" href="/<%=item.name %>"><%=item.name%></a></li>
+      <%    });%>
+
+        </ul>
+      </div>
+    </div>
+  </nav> -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Todo List</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+
+      <%  if(listsname.length !== 0 ){%>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            View Your Lists
+          </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <% listsname.forEach((item)=>  {%>
+                  <li><a class="dropdown-item" href="/<%=item.name %>"><%=item.name%></a></li>
+          <%    });%>
+            </ul>
+          <%}%>
+
+        </li>
+
+      </ul>
       <form action="/addCustomList" method="post" class="d-flex">
         <input class="form-control me-2" name="customList" type="search" placeholder="Add your Custom list" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Add</button>
       </form>
     </div>
-  </nav>
+  </div>
+</nav>
