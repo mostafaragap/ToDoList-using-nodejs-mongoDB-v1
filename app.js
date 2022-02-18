@@ -109,7 +109,7 @@ app.post("/addCustomList" , (req,res)=>
           }
         );
         list.save();
-        res.redirect("/"+ newListName);
+        res.redirect("/custom/"+ newListName);
       }else {
           res.render("list", {listTitle:newListName ,listsname:array, newListItems: result.items});
           console.log("Exist list name");
@@ -125,36 +125,7 @@ app.post("/addCustomList" , (req,res)=>
 
 });
 
-app.get("/:custmListName", function(req,res){
 
-const newListName = req.params.custmListName;
-
-List.find((err,results) =>
-{
-  if(!err){
-    const array =[] ;
-  results.forEach((item) => {
-    array.push(item);
-
-  });
-  List.findOne({name:newListName} , (err,result)=>{
-    if(err){console.log(err);}
-    else{
-
-
-   res.render("list", {listTitle: newListName, listsname :array,newListItems: result.items });
-
-
-
-    }
-
-  });
-  }
-});
-
-
-
-});
 
 
 app.post("/", function(req, res){
@@ -182,7 +153,7 @@ app.post("/", function(req, res){
   {
     result.items.push(newItem);
     result.save();
-    res.redirect("/"+ listName);
+    res.redirect("/custom/"+ listName);
   }
 });
 
@@ -213,10 +184,40 @@ app.post("/delete" , (req,res)=>
   List.findOneAndUpdate({name :valueOfListTitle } , {$pull : {items :{_id:removedItem} }} , (err , results)=>{
     if(err){console.log(err);} else
     {
-      res.redirect("/"+valueOfListTitle );
+      res.redirect("/custom/"+valueOfListTitle );
     }
   });
 }
+
+
+});
+
+app.get("/custom/:custmListName", function(req,res){
+
+const newListName = req.params.custmListName;
+const array =[] ;
+List.find((err,results) =>
+{
+  if(!err){
+
+  results.forEach((item) => {
+    array.push(item);
+
+  });
+
+  List.findOne({name:newListName} , (err,result)=>{
+    if(err){console.log(err);}
+    else{
+
+   res.render("custom", {listTitle: newListName, listsname :array, newListItems: result.items });
+
+
+    }
+
+  });
+  }
+});
+
 
 
 });
